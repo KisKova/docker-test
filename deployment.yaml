@@ -1,23 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: docker-test
+  name: k8s-doc-example
   labels:
-    app: docker-test
+    app: k8s-doc-example
 spec:
   selector:
     matchLabels:
-      app: docker-test
+      app: k8s-doc-example
   replicas: 1
   template:
     metadata:
-      name: docker-test
+      name: k8s-doc-example
       labels:
-        app: docker-test
+        app: k8s-doc-example
     spec:
       containers:
-        - name: docker-test
-          image: local/docker-test:latest # Image that will be used inside the container in the cluster
+        - name: k8s-doc-example
+          image: local/devops-test-example:latest # Image that will be used inside the container in the cluster
           imagePullPolicy: Never
           ports:
             - containerPort: 8080 # The port that the container is running on in the cluster
@@ -26,13 +26,13 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: docker-test
+  name: k8s-doc-example
   labels:
-    app: docker-test
+    app: k8s-doc-example
 spec:
   type: NodePort
   selector:
-    app: docker-test
+    app: k8s-doc-example
   ports:
     - name: http
       port: 8080 # The port that the service is running on in the cluster
