@@ -1,0 +1,31 @@
+version: "3.8"
+services:
+  db:
+    image: "postgres:14.1-alpine"
+    restart: always
+    container_name: "doc-pgsql-container"
+    ports:
+      - 5432:5432
+    volumes:
+      - db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=doc-db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+  backend:
+    image: 'devops-demo:latest'
+    build:
+      context: ./
+    container_name: 'devops-demo-container'
+    ports:
+      - 8080:8080
+    depends_on:
+      - db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/doc-db
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+volumes:
+  db:
+    driver: local

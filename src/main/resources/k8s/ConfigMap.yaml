@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: PersistentVolume #providers persistent storage in a cluster
+metadata:
+  name: k8s-doc-example
+spec:
+  capacity:
+    storage: 100Mi #100MB storage
+  accessModes:
+    - ReadWriteMany
+  hostPath:
+    path: /data
