@@ -10,7 +10,7 @@
 #ENTRYPOINT ["java", "-jar", "/docker-test-0.0.1-SNAPSHOT.jar"]
 
 FROM maven:3.9.4-eclipse-temurin-17-alpine AS build
-RUN mkdir-p/app
+RUN mkdir -p /app
 WORKDIR /app
 COPY pom.xml /app
 COPY src /app/src
