@@ -1,25 +1,25 @@
-name: CD - Deploy to Minikube using GitHub Actions
+name: CD -Deploy to Minikube using Github Actions
 
 on:
+  #Trigger the workflow on push from the master/main branch or on pull request
   push:
-    branches:
-      - master
+    branches: [ master ] # main
+  pull_request:
+    branches: [ master ] # main
 
 jobs:
-  build-and-deploy:
+  # Build job
+  job1:
+    name: Build and Deploy to Minikube
+    # Run on Ubuntu using the latest version
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
+      - uses: actions/checkout@v4
       - name: Start Minikube
         id: minikube
         uses: medyagh/setup-minikube@latest
-
-      - name: Try the cluster
+      - name: Try the cluster !
         run: kubectl get pods -A
-
       - name: Build Image
         run: |
           export SHELL=/bin/bash
@@ -27,21 +27,19 @@ jobs:
           docker build -f ./Dockerfile -t local/k8s-doc-example .
           echo -n "Verifying images: "
           docker images
-
       - name: Deploy to Minikube
         run: |
           kubectl apply -f deployment.yaml
           kubectl wait --for=condition=Ready pod -l app=k8s-doc-example
           kubectl get all
-
       - name: Test service URLs
         run: |
           echo "SERVICE_URL=$(minikube service k8s-doc-example --url)"
           kubectl port-forward service/k8s-doc-example 8080:8080 &> /dev/null &
           sleep 5
           kubectl port-forward service/k8s-doc-example 8080:8080 &> /dev/null &
-          curl -i http://localhost:8080/
-
+      - run: |
+          curl -i http://127.0.0.1:8080/
       - name: Cleanup
         run: |
           eval $(minikube docker-env -u)
