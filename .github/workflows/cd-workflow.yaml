@@ -38,8 +38,6 @@ jobs:
           kubectl port-forward service/k8s-doc-example 8080:8080 &> /dev/null &
           sleep 5
           kubectl port-forward service/k8s-doc-example 8080:8080 &> /dev/null &
-      - run: |
-          curl -i http://127.0.0.1:44995/
       - name: Cleanup
         run: |
           eval $(minikube docker-env -u)
