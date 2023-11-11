@@ -25,12 +25,14 @@ jobs:
           export SHELL=/bin/bash
           eval $(minikube -p minikube docker-env)
           docker build -f ./Dockerfile -t local/k8s-doc-example .
+          echo -n "Verifying images: "
+          docker images
 
       - name: Deploy to Minikube
         run: |
           kubectl apply -f deployment.yaml
           kubectl wait --for=condition=Ready pod -l app=k8s-doc-example
-          sleep 10  # Adjust the sleep duration based on your application startup time
+          kubectl get all
 
       - name: Test service URLs
         run: |
